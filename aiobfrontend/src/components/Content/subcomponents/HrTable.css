@@ -1,0 +1,28 @@
+.hr-container {
+    margin: 50px;
+    text-align: center;
+}
+
+.hr-table {
+    column-width: auto;
+    text-align: center;
+    margin: 0 auto;
+    width: auto;
+    border-collapse: collapse;
+    border-radius: 1em;
+}
+
+.hr-table th,
+.hr-table tr,
+.hr-table td {
+  font-weight: normal;
+  padding: 15px;
+}
+
+.header-row th {
+    font-weight: bold;
+}
+
+.hr-table .font-weight-b {
+    font-weight: bold;
+  }

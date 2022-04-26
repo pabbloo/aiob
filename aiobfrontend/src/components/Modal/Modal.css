@@ -1,0 +1,36 @@
+.modal-style {
+    -webkit-box-shadow: -1px 1px 3px 3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 1px 3px 3px rgba(0, 0, 0, 0.75);
+    box-shadow: -1px 1px 3px 3px rgba(0, 0, 0, 0.75);
+    border-width: 0px;
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    padding: 0px;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    overflow: hidden;
+    margin-top: 10px;
+    min-height: 400px;
+  }
+  
+  .modal-style input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .modal-style .add-button {
+    margin: 10px 0px 10px 10px;
+  }
+  
+  .modal-style .cancel-button {
+    margin: 10px 10px 10px 0px;
+  }
+  
+  .modal-style::backdrop {
+    backdrop-filter: blur(2px);
+  }
