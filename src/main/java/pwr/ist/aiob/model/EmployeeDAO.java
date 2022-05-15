@@ -7,8 +7,9 @@ import java.util.Objects;
 @Entity
 public class EmployeeDAO {
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String surname;
     private String personalNumber;
@@ -18,8 +19,7 @@ public class EmployeeDAO {
     private Date employmentDate;
     private Date firedDate;
 
-
-    EmployeeDAO() {}
+    public EmployeeDAO() {}
 
     public EmployeeDAO(String name, String surname, String personalNumber, Integer salary, String jobPosition, String division) {
         this.name = name;
