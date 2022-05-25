@@ -1,4 +1,4 @@
-package pwr.ist.aiob.mfa;
+package pwr.ist.aiob.security.mfa;
 
 import dev.samstevens.totp.code.CodeVerifier;
 import dev.samstevens.totp.code.HashingAlgorithm;

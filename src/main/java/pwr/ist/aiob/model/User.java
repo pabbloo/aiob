@@ -1,6 +1,9 @@
 package pwr.ist.aiob.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
@@ -11,15 +14,27 @@ public class User {
     private String username;
     private String password;
     private String email;
-    //private Role role
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
     private Date createdAt;
     private String mfaSecret;
     private boolean has2FA;
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, String role, String mfaSecret) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
+        this.mfaSecret = mfaSecret;
+        has2FA = true;
         createdAt = new Date();
     }
 

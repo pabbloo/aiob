@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import pwr.ist.aiob.mfa.MFATokenManager;
-import pwr.ist.aiob.mfa.MfaTokenData;
+import pwr.ist.aiob.security.mfa.MFATokenManager;
+import pwr.ist.aiob.security.mfa.MfaTokenData;
 import pwr.ist.aiob.model.User;
 import pwr.ist.aiob.repository.UserRepository;
 
