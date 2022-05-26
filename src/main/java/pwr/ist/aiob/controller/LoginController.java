@@ -40,12 +40,12 @@ public class LoginController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new Exception("Wrong credentials", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         CustomUserDetails userDetails = customUserDetailsService.loadUserByUsername(loginRequest.getUsername());
         if(!userService.is2FACodeCorrect(loginRequest.getMfaCode(), userDetails.getMfaSecret())) {
-            throw new Exception("Wrong 2FA");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("2FA Failed");
         }
 
         String jwt = jwtTokenUtil.generateToken(userDetails);

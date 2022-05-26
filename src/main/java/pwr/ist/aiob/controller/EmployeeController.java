@@ -66,4 +66,9 @@ class EmployeeController {
         }
 
     }
+
+    @GetMapping("/insecure")
+    ResponseEntity<List<EmployeeDAO>> insecureGet() {
+        return ResponseEntity.status(HttpStatus.OK).body(employeeRepository.findAll());
+    }
 }
