@@ -2,11 +2,18 @@ package pwr.ist.aiob.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import pwr.ist.aiob.model.EmployeeDAO;
+import pwr.ist.aiob.model.LoginRequest;
+import pwr.ist.aiob.model.LoginResponse;
 import pwr.ist.aiob.model.User;
 import pwr.ist.aiob.repository.UserRepository;
+import pwr.ist.aiob.model.CustomUserDetails;
+import pwr.ist.aiob.service.CustomUserDetailsService;
 import pwr.ist.aiob.service.UserService;
+import pwr.ist.aiob.util.JwtUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,27 +26,34 @@ public class LoginController {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private AuthenticationManager authenticationManager;
+
+    @Resource
+    CustomUserDetailsService customUserDetailsService;
+
+    @Resource
+    private JwtUtil jwtTokenUtil;
+
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User userAttempt,
-                                      @RequestParam String code) {
-        User user = validateCredentials(userAttempt);
-        if(user == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        if(user.has2FA()){
-            if(userService.is2FACodeCorrect(code, user.getMfaSecret())) {
-                return ResponseEntity.status(HttpStatus.OK).build();
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            throw new Exception("Wrong credentials", e);
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        CustomUserDetails userDetails = customUserDetailsService.loadUserByUsername(loginRequest.getUsername());
+        if(!userService.is2FACodeCorrect(loginRequest.getMfaCode(), userDetails.getMfaSecret())) {
+            throw new Exception("Wrong 2FA");
+        }
+
+        String jwt = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new LoginResponse(jwt));
     }
 
     @GetMapping("/users")
     ResponseEntity<List<User>> all() {
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
-    }
-
-    public User validateCredentials(User userAttempt) {
-        return userService.validateCredentials(userAttempt);
     }
 }

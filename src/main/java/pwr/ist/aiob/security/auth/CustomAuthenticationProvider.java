@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import pwr.ist.aiob.security.CustomUserDetails;
+import pwr.ist.aiob.model.CustomUserDetails;
 import pwr.ist.aiob.security.mfa.MFATokenManager;
 
 import javax.annotation.Resource;

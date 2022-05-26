@@ -1,8 +1,11 @@
 package pwr.ist.aiob.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pwr.ist.aiob.filters.JwtRequestFilter;
 import pwr.ist.aiob.security.auth.CustomAuthenticationProvider;
 import pwr.ist.aiob.security.auth.CustomWebAuthenticationDetailsSource;
 
@@ -29,17 +34,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private CustomAuthenticationProvider customAuthenticationProvider;
 
+    @Resource
+    private JwtRequestFilter jwtRequestFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
-                .antMatchers("/**").hasAuthority("USER")
-                .and()
-                .logout().permitAll()
+        http.authorizeRequests()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/**").authenticated()
                 .and().cors()
                 // to use with frontend .and().formLogin().authenticationDetailsSource(customWebAuthenticationDetailsSource)
                 .and().csrf().disable();
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
