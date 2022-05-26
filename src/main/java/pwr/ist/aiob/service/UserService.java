@@ -55,16 +55,6 @@ public class UserService {
         return user.isEmpty();
     }
 
-    public User validateCredentials(User user) {
-        Optional<User> dbUser = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
-        if(dbUser.isPresent()) {
-            String pass = Hashing.sha256().hashString(user.getPassword(), StandardCharsets.UTF_8).toString(); // TODO Powinno być hashowane po stronie klienta
-            if (Objects.equals(dbUser.get().getPassword(), pass))
-                return dbUser.get();
-        }
-        return null;
-    }
-
     private void hashPassword(User from, User to) {
         to.setPassword(
                 Hashing.sha256().hashString(from.getPassword(), StandardCharsets.UTF_8).toString()
