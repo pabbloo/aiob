@@ -1,7 +1,10 @@
 package pwr.ist.aiob.filters;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,6 +25,8 @@ public class BasicRequestFilter extends OncePerRequestFilter {
     @Resource
     CustomUserDetailsService userDetailsService;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
@@ -38,7 +43,7 @@ public class BasicRequestFilter extends OncePerRequestFilter {
 
             CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (password.equals(userDetails.getPassword())){
+            if (passwordEncoder.matches(password, userDetails.getPassword())){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
