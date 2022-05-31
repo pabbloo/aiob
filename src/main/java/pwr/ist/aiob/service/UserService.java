@@ -26,16 +26,17 @@ public class UserService {
     @Resource
     private MFATokenManager mfaTokenManager;
 
-    public String registerWithSecret(User user) {
+    public MfaTokenData registerWithSecret(User user) throws QrGenerationException {
         User userEntity = new User();
         BeanUtils.copyProperties(user, userEntity);
         hashPassword(user, userEntity);
         String secret = mfaTokenManager.generateSecretKey();
+        String qrCode = mfaTokenManager.getQRCode(secret);
         userEntity.setMfaSecret(secret);
         userEntity.setHas2FA(true);
         userRepository.save(userEntity);
         logger.info("User registered " + userEntity);
-        return secret;
+        return new MfaTokenData(qrCode, secret);
     }
 
     public MfaTokenData mfaSetup(Long id) throws QrGenerationException {

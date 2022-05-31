@@ -1,5 +1,7 @@
 package pwr.ist.aiob.model;
 
+import pwr.ist.aiob.security.mfa.MfaTokenData;
+
 public class SignupResponse {
 
     public enum Status {
@@ -12,14 +14,17 @@ public class SignupResponse {
 
     private final String secret;
 
+    private String qrCode;
+
     public SignupResponse(SignupResponse.Status status, String username) {
         this(status, username, null);
     }
 
-    public SignupResponse(SignupResponse.Status status, String username, String secret) {
+    public SignupResponse(SignupResponse.Status status, String username, MfaTokenData mfaTokenData) {
         this.status = status;
         this.username = username;
-        this.secret = secret;
+        this.secret = mfaTokenData.getMfaCode();
+        this.qrCode = mfaTokenData.getQrCode();
     }
 
     public SignupResponse.Status getStatus() {
@@ -33,4 +38,13 @@ public class SignupResponse {
     public String getUsername() {
         return username;
     }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
 }
