@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost")
+@CrossOrigin
 class EmployeeController {
 
     private final EmployeeRepository employeeRepository;

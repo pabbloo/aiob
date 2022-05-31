@@ -18,6 +18,7 @@ import pwr.ist.aiob.util.JwtUtil;
 import javax.annotation.Resource;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class LoginController {
     @Resource
