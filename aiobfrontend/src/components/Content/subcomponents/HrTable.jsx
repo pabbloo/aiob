@@ -14,7 +14,7 @@ const HrTable = () => {
     const navigate = useNavigate();
 
     const deleteQuery = useMutation(deleteHrData);
-    useQuery('getHrTable', getHrTable, { onSuccess: (response) => {
+    useQuery('getHrTable', () => getHrTable(token), { onSuccess: (response) => {
         if (response.status === 200) {
             const { data } = response;
             setHrData([...data]);
@@ -22,8 +22,8 @@ const HrTable = () => {
     }});
 
     const deleteItem = (id) => {
-        deleteQuery.mutate({hrRowId: id, token}, {onSuccess: (response) => {
-            if (response.status === 204) {
+        deleteQuery.mutate({id, token}, {onSuccess: (response) => {
+            if (response.status === 200) {
                 setHrData((prevState) => prevState.filter(item => item.id !== id));
             } else {
                 alert(`Serwer wysłał odpowiedź ze statusem ${response.status}, spróbuj ponownie za chwile lub skontaktuj się z administratorem`);

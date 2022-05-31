@@ -11,19 +11,19 @@ import { ApplicationContext } from '../../ApplicationContext/ApplicationProvider
 const LoginForm = ({handleOnClose, isModalOpen}) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    // const {setToken, setUsername, setUserId} = useContext(ApplicationContext);
-    // const loginQuery = useMutation(authorizeUser, { onSuccess: (response) => {
-    //     if (response?.data) {
-    //         const { data } = response;
-    //         setToken(data.token);
-    //         setRole(data.role);
-    //         setUsername(data.username);
-    //         setUserId(data.id);
-    //     }
-    // }});
+    const [mfaCode, setMfaCode] = useState('');
+    const {setToken, setUsername} = useContext(ApplicationContext);
+    const loginQuery = useMutation(authorizeUser, { onSuccess: (response) => {
+        if (response?.data) {
+            const { data } = response;
+            setToken(data.jwt);
+            setUsername(login);
+        }
+    }});
 
     const handleOnLoginChange = e => setLogin(e.target.value);
     const handleOnPasswordChange = e => setPassword(e.target.value);
+    const handleOnMfaChange = e => setMfaCode(e.target.value);
     const handleOnCloseModal = e => {
         e.preventDefault();
         handleOnClose();
@@ -32,6 +32,7 @@ const LoginForm = ({handleOnClose, isModalOpen}) => {
     const resetInputStates = () => {
         setLogin('');
         setPassword('');
+        setMfaCode('');
     }
 
     const handleOnSubmit = e => {
@@ -40,17 +41,17 @@ const LoginForm = ({handleOnClose, isModalOpen}) => {
             alert('Dane logowania nie zostały podane');
             return
         }
-        // loginQuery.mutate({login, password}, {onSuccess: (response) => {
-        //     if (response.status === SUCCESS_CODE)
-        //     {
-        //         alert('Zalogowano');
-        //         handleOnClose();
-        //     } else {
-        //         alert("Podany login lub hasło jest niepoprawne");
-        //     }
-        // }, onError: (error) => {
-        //     alert(`Wystąpił błąd: ${error.message}, spróbuj wykonać operacje ponownie lub skontaktuj się z administratorem`);
-        // }});
+        loginQuery.mutate({username: login, password, mfaCode}, {onSuccess: (response) => {
+            if (response.status === 200)
+            {
+                alert('Zalogowano');
+                handleOnClose();
+            } else {
+                alert("Podany login lub hasło jest niepoprawne");
+            }
+        }, onError: (error) => {
+            alert(`Wystąpił błąd: ${error.message}, spróbuj wykonać operacje ponownie lub skontaktuj się z administratorem`);
+        }});
     }
 
     useEffect(() => {
@@ -74,6 +75,11 @@ const LoginForm = ({handleOnClose, isModalOpen}) => {
                 <div className="modal-row">
                     <label className="modal-label">
                         <input type="password" value={password} placeholder="Hasło" onChange={handleOnPasswordChange} className="modal-input"/>
+                    </label>
+                </div>
+                <div className="modal-row">
+                    <label className="modal-label">
+                        <input type="text" value={mfaCode} placeholder="Kod MFE" onChange={handleOnMfaChange} className="modal-input"/>
                     </label>
                 </div>
                 <div className="modal-row">

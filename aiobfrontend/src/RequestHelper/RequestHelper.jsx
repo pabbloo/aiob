@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL: 'https://localhost:44323',
+    baseURL: 'https://localhost:443',
     validateStatus: false,
     headers: {
         'Access-Control-Allow-Origin':'*',
@@ -11,38 +11,42 @@ const request = axios.create({
     }
 });
 
-export const authorizeUser = async (credentials) => {
-    const response = await request.post('/api/user/authenticate', credentials);
+export const authorizeUser = async ({username, password, mfaCode}) => {
+    const response = await request.post('/login', {username, password, mfaCode});
     return response;
 };
 
-export const getHrTable = async () => {
-    return {status: 200, data:[{
-        id: 0,
-        name: "Lukasz",
-        surname: "Zietek",
-        salary: 10000
-    }, {
-        id: 1,
-        name: "Lukasz",
-        surname: "Zietek",
-        salary: 20000
-    }]}
+export const registerAccount = async ({username, password, email}) => {
+    const response = await request.post('/signup', {username, password, email});
+    return response;
 }
 
-export const deleteHrData = async () => {
-    return {status: 204};
+export const getHrTable = async (token) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.get('/employees');
+    return response;
 }
 
-export const editHrData = async ({name, surname, personalNumber, salary, jobPosition, division, ifFired}) => {
-    return {status: 204};
+export const deleteHrData = async ({id, token}) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.delete(`/employees/${id}`);
+    return response;
 }
 
-export const getHrEntry = async (id) => {
-    return { status: 200, data: {id: 0, name: 'Lukasz', surname: 'Zietek', personalNumber:'125125125',
-     salary:20000, jobPosition: 'HR Specialist', division: 'HR', ifFired: false}};
+export const editHrData = async ({id, name, surname, personalNumber, salary, jobPosition, division, token}) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.put(`/employees/${id}`, {id, name, surname, personalNumber, salary, jobPosition, division});
+    return response;
+}
+
+export const getHrEntry = async ({id, token}) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.get(`/employees/${id}`);
+    return response;
 };
 
-export const addHrEntry = async ({name, surname, personalNumber, salary, jobPosition, division}) => {
-    return {status: 201};
+export const addHrEntry = async ({name, surname, personalNumber, salary, jobPosition, division, token}) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.post('/employees/', {name, surname, personalNumber, salary, jobPosition, division});
+    return response;
 }

@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
+import { registerAccount } from '../../RequestHelper/RequestHelper';
 
 import Modal from '../Modal/Modal';
 
-// import { registerAccount } from '../../RequestHelper/RequestHelper';
-
 const RegisterForm = ({handleOnClose, isModalOpen}) => {
-    // const registerQuery = useMutation(registerAccount);
+    const registerQuery = useMutation(registerAccount);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -31,17 +30,17 @@ const RegisterForm = ({handleOnClose, isModalOpen}) => {
 
     const handleOnSubmit = e => {
         e.preventDefault();
-        // registerQuery.mutate({username, password, email, userInfo: {birthDate}}, {onSuccess: (response) => {
-        //     if (response.status === SUCCESS_CODE)
-        //     {
-        //         alert('Konto założone');
-        //         resetInputStates();
-        //     } else {
-        //         alert(`Serwer wysłał odpowiedź ze statusem ${response.status}, spróbuj ponownie za chwile lub skontaktuj się z administratorem`);
-        //     }
-        // }, onError: (error) => {
-        //     alert(`Wystąpił błąd: ${error.message}, spróbuj wykonać operacje ponownie lub skontaktuj się z administratorem`);
-        // }});
+        registerQuery.mutate({username, password, email}, {onSuccess: (response) => {
+            if (response.status === 200)
+            {
+                alert(`Konto założone, zapisz kod ${response.data.secret}`);
+                resetInputStates();
+            } else {
+                alert(`Serwer wysłał odpowiedź ze statusem ${response.status}, spróbuj ponownie za chwile lub skontaktuj się z administratorem`);
+            }
+        }, onError: (error) => {
+            alert(`Wystąpił błąd: ${error.message}, spróbuj wykonać operacje ponownie lub skontaktuj się z administratorem`);
+        }});
         resetInputStates();
     }
 

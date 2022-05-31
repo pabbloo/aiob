@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useParams, useNavigate} from 'react-router-dom';
 import { HR_TABLE } from '../../../common/WebsitePaths';
 import { editHrData, getHrEntry } from '../../../RequestHelper/RequestHelper';
+import { ApplicationContext } from '../../../ApplicationContext/ApplicationProvider';
 
 import './HrDataEditor.css';
 
@@ -15,10 +16,11 @@ const HrDataEditor = () => {
     const [ jobPosition, setJobPosition ] = useState('');
     const [ division, setDivision ] = useState('');
     const [ ifFired, setIfFired ] = useState(false);
+    const {token} = useContext(ApplicationContext);
     const navigate = useNavigate();
 
     const editQuery = useMutation(editHrData);
-    useQuery('getHrEntry', () => getHrEntry(hrDataId), { onSuccess: (response) => {
+    useQuery('getHrEntry', () => getHrEntry({id: hrDataId, token}), { onSuccess: (response) => {
         if (response.status === 200) {
             const { data } = response;
             setName(data.name);
@@ -27,7 +29,7 @@ const HrDataEditor = () => {
             setSalary(data.salary);
             setJobPosition(data.jobPosition);
             setDivision(data.division);
-            setIfFired(data.ifFired);
+            setIfFired(data.firedDate ? true : false);
         }
     }})
 
@@ -51,8 +53,8 @@ const HrDataEditor = () => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        editQuery.mutate({name, surname, personalNumber, salary, jobPosition, division, ifFired}, {onSuccess: (response) => {
-            if (response.status === 204)
+        editQuery.mutate({id:hrDataId, name, surname, personalNumber, salary, jobPosition, division, token}, {onSuccess: (response) => {
+            if (response.status === 200)
             {
                 alert('Akcja zakonczona sukcesem');
                 resetInputs();

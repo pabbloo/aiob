@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { HR_TABLE } from '../../../common/WebsitePaths';
 import { addHrEntry } from '../../../RequestHelper/RequestHelper';
+import { ApplicationContext } from '../../../ApplicationContext/ApplicationProvider';
 
 import './HrDataEditor.css';
 
@@ -13,6 +14,7 @@ const HrDataAdder = () => {
     const [ salary, setSalary ] = useState(0);
     const [ jobPosition, setJobPosition ] = useState('');
     const [ division, setDivision ] = useState('');
+    const { token } = useContext(ApplicationContext);
     const navigate = useNavigate();
 
     const addQuery = useMutation(addHrEntry);
@@ -35,8 +37,8 @@ const HrDataAdder = () => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        addQuery.mutate({name, surname, personalNumber, salary, jobPosition, division}, {onSuccess: (response) => {
-            if (response.status === 201)
+        addQuery.mutate({name, surname, personalNumber, salary, jobPosition, division, token}, {onSuccess: (response) => {
+            if (response.status === 200)
             {
                 alert('Akcja zakonczona sukcesem');
                 resetInputs();
