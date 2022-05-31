@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pwr.ist.aiob.model.EmployeeDAO;
 import pwr.ist.aiob.repository.EmployeeRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,10 +43,15 @@ class EmployeeController {
     }
 
     @PutMapping("/employees/{id}")
-    ResponseEntity<EmployeeDAO> updateEmployee(@RequestBody EmployeeDAO newEmployee, @PathVariable Long id) {
+    ResponseEntity<EmployeeDAO> updateEmployee(@RequestBody EmployeeDAO newEmployee, @RequestParam("isFired") boolean isFired, @PathVariable Long id) {
         Optional<EmployeeDAO> employee = employeeRepository.findById(id);
 
         if (employee.isPresent()){
+            newEmployee.setEmploymentDate(employee.get().getEmploymentDate());
+            if (isFired)
+                newEmployee.setFiredDate(new Date());
+            else
+                newEmployee.setFiredDate(employee.get().getFiredDate());
             employeeRepository.save(newEmployee);
             return ResponseEntity.status(HttpStatus.OK).body(newEmployee);
         } else{

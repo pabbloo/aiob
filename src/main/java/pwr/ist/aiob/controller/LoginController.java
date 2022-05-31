@@ -50,7 +50,7 @@ public class LoginController {
         }
 
         String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new LoginResponse(jwt));
+        return ResponseEntity.ok(new LoginResponse(jwt, userDetails.getRole()));
     }
 
     @GetMapping("/users")
