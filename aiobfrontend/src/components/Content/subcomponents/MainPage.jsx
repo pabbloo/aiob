@@ -2,7 +2,7 @@ import React from 'react';
 
 const MainPage = () => {
     return (
-        <p>Mainpage</p>
+        <p>HR Application V1.0</p>
     );
 };
 

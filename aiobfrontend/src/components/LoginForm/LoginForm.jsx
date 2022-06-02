@@ -12,12 +12,13 @@ const LoginForm = ({handleOnClose, isModalOpen}) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [mfaCode, setMfaCode] = useState('');
-    const {setToken, setUsername} = useContext(ApplicationContext);
+    const {setToken, setUsername, setRole} = useContext(ApplicationContext);
     const loginQuery = useMutation(authorizeUser, { onSuccess: (response) => {
         if (response?.data) {
             const { data } = response;
             setToken(data.jwt);
             setUsername(login);
+            setRole(data.role);
         }
     }});
 
