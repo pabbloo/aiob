@@ -4,15 +4,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pwr.ist.aiob.model.EmployeeDAO;
+import pwr.ist.aiob.model.InsecureId;
 import pwr.ist.aiob.repository.EmployeeRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
 class EmployeeController {
+
+    @PersistenceContext
+    public EntityManager em;
 
     private final EmployeeRepository employeeRepository;
 
@@ -74,7 +82,13 @@ class EmployeeController {
     }
 
     @GetMapping("/insecure")
-    ResponseEntity<List<EmployeeDAO>> insecureGet() {
-        return ResponseEntity.status(HttpStatus.OK).body(employeeRepository.findAll());
+    ResponseEntity<List<EmployeeDAO>> insecureGet(@RequestBody InsecureId id) {
+        return ResponseEntity.status(HttpStatus.OK).body(findUserByIdInsecure(id.getId()));
+    }
+
+    public List<EmployeeDAO> findUserByIdInsecure(String id) {
+        String jql = "from EmployeeDAO where id = " + id + "";
+        TypedQuery<EmployeeDAO> q = em.createQuery(jql, EmployeeDAO.class);
+        return q.getResultList();
     }
 }
