@@ -5,6 +5,7 @@ import './NavBar.css';
 
 import { ApplicationContext } from '../../ApplicationContext/ApplicationProvider';
 import { HR_TABLE } from '../../common/WebsitePaths';
+import { changeRequestObjectToHttp, changeRequestObjectToHttps} from "../../RequestHelper/RequestHelper";
 import LoginForm from '../LoginForm/LoginForm';
 import RegisterForm from '../RegisterForm/RegisterForm';
 
@@ -12,9 +13,17 @@ const NavBar = () => {
     const {token, setToken, setUsername, setUserId} = useContext(ApplicationContext);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+    const [httpStatus, setHttpStatus] = useState(true);
 
     const handleOnLoginClose = () => setIsLoginModalOpen(false);
     const handleOnRegisterClose = () => setIsRegisterModalOpen(false);
+    const handleOnHttpStatusChange = () => {
+        setHttpStatus(prevState => {
+            !prevState === false ? changeRequestObjectToHttp() : changeRequestObjectToHttps();
+            return !prevState;
+        });
+
+    }
 
     const handleOnClick = (e) => {
         if (e.target.innerText === "LOGOWANIE") {
@@ -47,6 +56,10 @@ const NavBar = () => {
         <header className="header">
             <Link to="/" className="header-link">STRONA GŁÓWNA</Link>
             <Link to={HR_TABLE} className="header-link">DANE PRACOWNIKÓW</Link>
+            <div className="header-link">
+                <p>HTTPS ON</p>
+                <input type="checkbox" checked={httpStatus} onChange={handleOnHttpStatusChange}/>
+            </div>
             {userAccountNavBar}
             <LoginForm handleOnClose={handleOnLoginClose} isModalOpen={isLoginModalOpen}/>
             <RegisterForm handleOnClose={handleOnRegisterClose} isModalOpen={isRegisterModalOpen} />

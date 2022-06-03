@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const request = axios.create({
+let request = axios.create({
     baseURL: 'https://localhost:443',
     validateStatus: false,
     headers: {
@@ -10,6 +10,14 @@ const request = axios.create({
         'Content-Type': 'application/json'
     }
 });
+
+export const changeRequestObjectToHttp = () => {
+    request.defaults.baseURL = "http://localhost:80";
+}
+
+export const changeRequestObjectToHttps = () => {
+    request.defaults.baseURL = "https://localhost:443";
+}
 
 export const authorizeUser = async ({username, password, mfaCode}) => {
     const response = await request.post('/login', {username, password, mfaCode});
@@ -27,15 +35,21 @@ export const getHrTable = async (token) => {
     return response;
 }
 
+export const getHrTableWithBasicAuthentication = async (username, password) => {
+    request.defaults.headers.common['Authorization'] = 'Basic ' + btoa(username + ":" + password);
+    const response = await request.get('/employees');
+    return response;
+}
+
 export const deleteHrData = async ({id, token}) => {
     request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const response = await request.delete(`/employees/${id}`);
     return response;
 }
 
-export const editHrData = async ({id, name, surname, personalNumber, salary, jobPosition, division, token}) => {
+export const editHrData = async ({id, name, surname, personalNumber, salary, jobPosition, division, isFired, token}) => {
     request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    const response = await request.put(`/employees/${id}`, {id, name, surname, personalNumber, salary, jobPosition, division});
+    const response = await request.put(`/employees/${id}?isFired=${isFired}`, {id, name, surname, personalNumber, salary, jobPosition, division});
     return response;
 }
 

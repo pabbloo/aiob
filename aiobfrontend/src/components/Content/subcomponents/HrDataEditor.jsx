@@ -29,7 +29,7 @@ const HrDataEditor = () => {
             setSalary(data.salary);
             setJobPosition(data.jobPosition);
             setDivision(data.division);
-            setIfFired(data.firedDate ? true : false);
+            setIfFired(!!data.firedDate);
         }
     }})
 
@@ -53,7 +53,7 @@ const HrDataEditor = () => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        editQuery.mutate({id:hrDataId, name, surname, personalNumber, salary, jobPosition, division, token}, {onSuccess: (response) => {
+        editQuery.mutate({id:hrDataId, name, surname, personalNumber, salary, jobPosition, division, isFired:ifFired, token}, {onSuccess: (response) => {
             if (response.status === 200)
             {
                 alert('Akcja zakonczona sukcesem');
@@ -129,7 +129,7 @@ const HrDataEditor = () => {
                     <label htmlFor="ifFired" className="m-right-10">Zwolniony</label>
                 </div>
                 <div className="seventh-row s-column">
-                    <input id="ifFired" className="hr-data-input" type="checkbox" value={ifFired} 
+                    <input id="ifFired" className="hr-data-input" type="checkbox" checked={ifFired}
                         onChange={handleOnFiredStateChanged} />
                 </div>
 
