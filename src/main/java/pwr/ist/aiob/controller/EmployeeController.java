@@ -81,7 +81,7 @@ class EmployeeController {
 
     }
 
-    @GetMapping("/insecure")
+    @PostMapping("/insecure")
     ResponseEntity<List<EmployeeDAO>> insecureGet(@RequestBody InsecureId id) {
         return ResponseEntity.status(HttpStatus.OK).body(findUserByIdInsecure(id.getId()));
     }
