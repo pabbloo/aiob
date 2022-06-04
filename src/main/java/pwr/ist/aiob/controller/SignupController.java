@@ -13,7 +13,8 @@ import pwr.ist.aiob.service.UserService;
 
 import javax.annotation.Resource;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000") // --- CORS WLACZONY
+//@CrossOrigin  // ----- CORS WYLACZONY
 @RestController
 public class SignupController {
 

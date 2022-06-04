@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import './NavBar.css';
 
 import { ApplicationContext } from '../../ApplicationContext/ApplicationProvider';
-import { HR_TABLE } from '../../common/WebsitePaths';
+import { HR_TABLE, SQL_INJECTION } from '../../common/WebsitePaths';
 import { changeRequestObjectToHttp, changeRequestObjectToHttps} from "../../RequestHelper/RequestHelper";
 import LoginForm from '../LoginForm/LoginForm';
 import RegisterForm from '../RegisterForm/RegisterForm';
@@ -56,6 +56,7 @@ const NavBar = () => {
         <header className="header">
             <Link to="/" className="header-link">STRONA GŁÓWNA</Link>
             <Link to={HR_TABLE} className="header-link">DANE PRACOWNIKÓW</Link>
+            <Link to={SQL_INJECTION} className="header-link">SQL_INJECTION</Link>
             <div className="header-link">
                 <p>HTTPS ON</p>
                 <input type="checkbox" checked={httpStatus} onChange={handleOnHttpStatusChange}/>

@@ -12,7 +12,7 @@ let request = axios.create({
 });
 
 export const changeRequestObjectToHttp = () => {
-    request.defaults.baseURL = "http://localhost:80";
+    request.defaults.baseURL = "http://localhost:8080";
 }
 
 export const changeRequestObjectToHttps = () => {
@@ -38,6 +38,12 @@ export const getHrTable = async (token) => {
 export const getHrTableWithBasicAuthentication = async (username, password) => {
     request.defaults.headers.common['Authorization'] = 'Basic ' + btoa(username + ":" + password);
     const response = await request.get('/employees');
+    return response;
+};
+
+export const sendSqlInjectionRequest = async ({token, id}) => {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const response = await request.post(`/insecure`, {id});
     return response;
 }
 

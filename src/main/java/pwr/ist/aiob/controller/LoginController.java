@@ -18,7 +18,8 @@ import pwr.ist.aiob.util.JwtUtil;
 import javax.annotation.Resource;
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000") // --- CORS WLACZONY
+//@CrossOrigin  // ----- CORS WYLACZONY
 @RestController
 public class LoginController {
     @Resource

@@ -16,7 +16,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000") // --- CORS WLACZONY
+//@CrossOrigin  // ----- CORS WYLACZONY
 class EmployeeController {
 
     @PersistenceContext
