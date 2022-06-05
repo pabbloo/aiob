@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useParams, useNavigate} from 'react-router-dom';
-import { sendSqlInjectionRequest } from '../../../RequestHelper/RequestHelper';
+import { sendSqlInjectionRequest, sendSqlInjectionRequestWithBasicAuthorization } from '../../../RequestHelper/RequestHelper';
 import { ApplicationContext } from '../../../ApplicationContext/ApplicationProvider';
 
 import './HrDataEditor.css';
@@ -9,11 +9,13 @@ import './HrDataEditor.css';
 const SqlInjectionForm = () => {
     const [ idForm, setIdForm ] = useState('');
     const [ returnedData, setReturnedData ] = useState([]);
+    const [ ifBasic, setIfBasic ] = useState(false);
     const {token} = useContext(ApplicationContext);
 
-    const editQuery = useMutation(sendSqlInjectionRequest);
+    const editQuery = useMutation(ifBasic ? sendSqlInjectionRequestWithBasicAuthorization : sendSqlInjectionRequest);
 
     const handleOnSetIdChanged = (e) => setIdForm(e.target.value);
+    const handleOnBasicChanged = () => setIfBasic(prevState => !prevState);
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -39,6 +41,10 @@ const SqlInjectionForm = () => {
     return (
         <div className="hr-data-container">
             <h1>Wybierz pracownika</h1>
+            <div>
+                <p>BASIC AUTHORIZATION</p>
+                <input type="checkbox" checked={ifBasic} onChange={handleOnBasicChanged}/>
+            </div>
             <form onSubmit={handleOnSubmit} className="display-grid hr-data-form">
 
                 <div className="first-row f-column">

@@ -45,7 +45,14 @@ export const sendSqlInjectionRequest = async ({token, id}) => {
     request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     const response = await request.post(`/insecure`, {id});
     return response;
-}
+};
+
+export const sendSqlInjectionRequestWithBasicAuthorization = async ({token, id}) => {
+    request.defaults.headers.common['Authorization'] = 'Basic ' + btoa("user" + ":" + "user1");
+    const response = await request.post(`/insecure`, {id});
+    console.log(request.defaults.headers.common['Authorization']);
+    return response;
+};
 
 export const deleteHrData = async ({id, token}) => {
     request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
