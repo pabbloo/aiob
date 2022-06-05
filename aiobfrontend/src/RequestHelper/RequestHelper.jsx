@@ -50,7 +50,6 @@ export const sendSqlInjectionRequest = async ({token, id}) => {
 export const sendSqlInjectionRequestWithBasicAuthorization = async ({token, id}) => {
     request.defaults.headers.common['Authorization'] = 'Basic ' + btoa("user" + ":" + "user1");
     const response = await request.post(`/insecure`, {id});
-    console.log(request.defaults.headers.common['Authorization']);
     return response;
 };
 

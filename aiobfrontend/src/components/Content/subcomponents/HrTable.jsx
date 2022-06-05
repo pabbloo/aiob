@@ -3,14 +3,13 @@ import { useQuery, useMutation } from 'react-query';
 
 import './HrTable.css';
 
-import { getHrTable, deleteHrData, getHrTableWithBasicAuthentication } from "../../../RequestHelper/RequestHelper";
+import { getHrTable, deleteHrData } from "../../../RequestHelper/RequestHelper";
 import { ApplicationContext } from '../../../ApplicationContext/ApplicationProvider';
 import { useNavigate } from 'react-router-dom';
 import { ADD_HR_DATA, BASE_EDIT_HR_DATA } from '../../../common/WebsitePaths';
 
 const HrTable = () => {
     const [ hrData, setHrData ] = useState([]);
-    const [ ifBasic, setIfBasic ] = useState(false);
     const { token } = useContext(ApplicationContext);
     const navigate = useNavigate();
 
@@ -21,8 +20,6 @@ const HrTable = () => {
             setHrData([...data]);
         }
     }});
-
-    const handleOnBasicChanged = () => setIfBasic(prevState => !prevState);
 
     const deleteItem = (id) => {
         deleteQuery.mutate({id, token}, {onSuccess: (response) => {
@@ -63,12 +60,6 @@ const HrTable = () => {
     return (
         <div className='hr-container'>
             <h1>Dane pracowników</h1>
-            <div>
-                <p>BASIC AUTHORIZATION</p>
-                <input type="checkbox" checked={ifBasic} onChange={handleOnBasicChanged}/>
-            </div>
-            <br/>
-            <br/>
             <br/>
             <button className='button add-button' onClick={addItem}>Dodaj wpis</button>
             <table className='hr-table app-table'>
