@@ -5,6 +5,8 @@ import dev.samstevens.totp.exceptions.QrGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pwr.ist.aiob.security.mfa.MFATokenManager;
 import pwr.ist.aiob.security.mfa.MfaTokenData;
@@ -26,10 +28,14 @@ public class UserService {
     @Resource
     private MFATokenManager mfaTokenManager;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public MfaTokenData registerWithSecret(User user) throws QrGenerationException {
         User userEntity = new User();
         BeanUtils.copyProperties(user, userEntity);
-        hashPassword(user, userEntity);
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        //hashPassword(user, userEntity);
         String secret = mfaTokenManager.generateSecretKey();
         String qrCode = mfaTokenManager.getQRCode(secret);
         userEntity.setMfaSecret(secret);
